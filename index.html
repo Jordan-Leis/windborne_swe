@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASOS Explorer</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-o9N1j7k2d7PxGfaQZ8z8zT2vCj1p2JkJ8R7n8L0JpWw=" crossorigin="" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="branding">
+        <h1>ASOS Explorer</h1>
+        <p>Explore historical ASOS weather observations from around the world.</p>
+      </div>
+      <div class="actions">
+        <label class="search-label" for="station-search">Search station</label>
+        <input
+          id="station-search"
+          type="search"
+          placeholder="Search by id, name, or city"
+          aria-label="Search stations"
+          list="station-suggestions"
+        />
+        <datalist id="station-suggestions"></datalist>
+        <button id="locate-me" type="button">Near me</button>
+      </div>
+    </header>
+    <main>
+      <section class="map-and-panel">
+        <div id="map" role="application" aria-label="ASOS station map"></div>
+        <aside id="station-panel" aria-live="polite">
+          <div class="panel-placeholder">
+            <h2>Select a station</h2>
+            <p>Tap any marker on the map or use the search to view historical weather insights.</p>
+          </div>
+        </aside>
+      </section>
+      <section class="calendar" aria-live="polite">
+        <div class="calendar-header">
+          <button id="prev-month" type="button" aria-label="Previous month">◀</button>
+          <h2 id="calendar-title">Loading…</h2>
+          <button id="next-month" type="button" aria-label="Next month">▶</button>
+        </div>
+        <div class="calendar-grid" role="grid" aria-describedby="calendar-title"></div>
+      </section>
+    </main>
+    <footer>
+      <p>
+        Built as part of the WindBorne Systems Software Engineering Intern (Product) challenge. Uses
+        <a href="https://sfc.windbornesystems.com" target="_blank" rel="noopener">WindBorne ASOS API</a>.
+      </p>
+    </footer>
+
+    <template id="station-template">
+      <section class="station-details">
+        <header class="station-header">
+          <div>
+            <h2 data-field="name"></h2>
+            <p data-field="location"></p>
+          </div>
+          <div class="badge" data-field="quality"></div>
+        </header>
+        <dl class="station-meta">
+          <div>
+            <dt>Identifier</dt>
+            <dd data-field="identifier"></dd>
+          </div>
+          <div>
+            <dt>Coordinates</dt>
+            <dd data-field="coords"></dd>
+          </div>
+          <div>
+            <dt>Elevation</dt>
+            <dd data-field="elevation"></dd>
+          </div>
+        </dl>
+        <div class="controls">
+          <label for="date-picker">Focus date</label>
+          <input id="date-picker" type="date" />
+          <button id="export-csv" type="button">Export CSV</button>
+        </div>
+        <section class="metrics">
+          <div class="metric" data-metric="temperature">
+            <h3>Temperature (°C)</h3>
+            <p><span data-field="temp-range"></span></p>
+          </div>
+          <div class="metric" data-metric="wind">
+            <h3>Wind (m/s)</h3>
+            <p><span data-field="wind-range"></span></p>
+          </div>
+          <div class="metric" data-metric="pressure">
+            <h3>Pressure (hPa)</h3>
+            <p><span data-field="pressure-range"></span></p>
+          </div>
+          <div class="metric" data-metric="precip">
+            <h3>Precipitation (mm)</h3>
+            <p><span data-field="precip-total"></span></p>
+          </div>
+        </section>
+        <section class="chart-section">
+          <canvas id="weather-chart" aria-label="Weather chart" role="img"></canvas>
+        </section>
+        <section class="table-section">
+          <h3>Observations</h3>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Time</th>
+                  <th scope="col">Temp (°C)</th>
+                  <th scope="col">Wind (m/s)</th>
+                  <th scope="col">Gust (m/s)</th>
+                  <th scope="col">Pressure (hPa)</th>
+                  <th scope="col">Precip (mm)</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </template>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-o9N1j7k2d7PxGfaQZ8z8zT2vCj1p2JkJ8R7n8L0JpWw=" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-zjT9W6k8ZZrVSu2Ce279b9Ec/WWEDuJeayQMZT6X0hgqP/d9vywgqbiZ9erjRzCQ" crossorigin="anonymous"></script>
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
